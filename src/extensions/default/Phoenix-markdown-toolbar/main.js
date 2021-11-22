@@ -1,3 +1,41 @@
+/*
+ * GNU AGPL-3.0 License
+ *
+ * Modified Work Copyright (c) 2021 - present core.ai . All rights reserved.
+ * Original work Copyright (c) 2016 Alan Hohn
+ *
+ * This program is free software: you can redistribute it and/or modify it
+ * under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE. See the GNU Affero General Public License
+ * for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program. If not, see https://opensource.org/licenses/AGPL-3.0.
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ */
+
 /*jslint vars: true, plusplus: true, devel: true, nomen: true, regexp: true, indent: 4, maxerr: 50 */
 /*global define, brackets */
 //jshint-ignore:no-start
@@ -17,13 +55,12 @@ define(function (require, exports, module) {
         KeyboardPrefs = JSON.parse(require("text!keyboard.json")),
         Strings = require("strings"),
         _markdownBarTemplate = require("text!templates/markdown-bar.html");
-    
+
     var prefs = PreferencesManager.getExtensionPrefs("markdownbar");
 
     var toolBar = null,
         barShouldShow = false,
         cmdToolbar = null;
-    var $icon;
 
     function registerCallbacks(toolBar) {
         var root = toolBar.getRoot();
@@ -82,7 +119,7 @@ define(function (require, exports, module) {
             Handler.reflow();
         });
     }
-    
+
     function showBar() {
         if (!toolBar) {
             var templateVars = {
@@ -129,11 +166,7 @@ define(function (require, exports, module) {
         }
     }
 
-    prefs.definePreference("showOnStartup", "boolean", true, {
-        description: Strings.DESCRIPTION_SHOW_ON_STARTUP
-    });
-
-    prefs.definePreference("maxLength", "number", 80, {
+prefs.definePreference("maxLength", "number", 80, {
         description: Strings.DESCRIPTION_MAX_LINE_LENGTH
     });
 
@@ -152,11 +185,8 @@ define(function (require, exports, module) {
         CODEBLOCK_COMMAND_ID = "alanhohn.markdowncodeblock",
         PARAGRAPH_COMMAND_ID = "alanhohn.markdownparagraph",
         REFLOW_COMMAND_ID = "alanhohn.markdownreflow";
-    
-    cmdToolbar = CommandManager.register(Strings.MENU_TOOLBAR, BAR_COMMAND_ID, toggleBar);
-    //var menu = Menus.getMenu(Menus.AppMenuBar.VIEW_MENU);
-    //menu.addMenuItem(BAR_COMMAND_ID, "Ctrl-Shift-T");
 
+    cmdToolbar = CommandManager.register(Strings.MENU_TOOLBAR, BAR_COMMAND_ID, toggleBar);
 
     CommandManager.register(Strings.HINT_H1, H1_COMMAND_ID, Handler.h1);
     CommandManager.register(Strings.HINT_H2, H2_COMMAND_ID, Handler.h2);
@@ -192,12 +222,7 @@ define(function (require, exports, module) {
 
     ExtensionUtils.loadStyleSheet(module, "styles/styles.css");
     ExtensionUtils.loadStyleSheet(module, "styles/octicons.css");
-
-    if (prefs.get("showOnStartup")) {
-
-        barShouldShow = true;
-
-    }
+    barShouldShow = true;
 
     activeEditorChangeHandler(null, EditorManager.getActiveEditor(), null);
     EditorManager.on("activeEditorChange", activeEditorChangeHandler);
