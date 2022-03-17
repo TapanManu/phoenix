@@ -60,12 +60,23 @@ async function copyThirdPartyLibs(){
         src(['node_modules/jszip/LICENSE.markdown'])
             .pipe(rename("jsZip.markdown"))
             .pipe(dest('src/thirdparty/licences/')),
+        // prettier
+        src(["node_modules/prettier/standalone.js"])
+            .pipe(dest("src/thirdparty/prettierLib")),
+        src(["node_modules/prettier/LICENSE"])
+            .pipe(rename("prettier.markdown"))
+            .pipe(dest("src/thirdparty/licences")),
+        src(["node_modules/prettier/parser-html.js"])
+            .pipe(dest("src/thirdparty/prettierLib")),
+        src(["node_modules/prettier/parser-markdown.js"])
+            .pipe(dest("src/thirdparty/prettierLib")),
         // underscore
         src(['node_modules/underscore/underscore-min.js'])
             .pipe(dest('src/thirdparty')),
         src(['node_modules/underscore/LICENSE'])
             .pipe(rename("underscore.markdown"))
             .pipe(dest('src/thirdparty/licences/'))
+
     );
 }
 

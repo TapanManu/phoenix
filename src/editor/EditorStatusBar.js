@@ -43,6 +43,7 @@ define(function (require, exports, module) {
         Dialogs              = require("widgets/Dialogs"),
         DefaultDialogs       = require("widgets/DefaultDialogs"),
         ProjectManager       = require("project/ProjectManager"),
+        Prettier             = require("thirdparty/prettierLib/standalone"),
         Async                = require("utils/Async"),
         FileSystem           = require("filesystem/FileSystem"),
         CommandManager       = require("command/CommandManager"),
@@ -62,6 +63,7 @@ define(function (require, exports, module) {
         $indentType,
         $indentWidthLabel,
         $indentWidthInput,
+        $statusPrettier,
         $statusOverwrite;
 
     /** Special list item for the 'set as default' gesture in language switcher dropdown */
@@ -373,6 +375,32 @@ define(function (require, exports, module) {
     }
 
     /**
+     *  Prettier code format extension
+     * @private
+     */
+    function _prettierCodeFormatter() {
+        var editor = EditorManager.getActiveEditor();
+        var text = editor.document.getText(true);
+        var lang = editor.document.getLanguage().getName().toLowerCase();
+
+        /* require language plugins for code formatting */
+        var plugins = 0;
+        //TODO: load the library
+        require(["thirdparty/prettierLib/parser-"+lang+".js"], function(e){
+            Prettier.format(text, {
+                parser: lang,
+                //pluginSearchDirs: ["thirdparty/prettierLib/"],
+                plugins: e
+            });
+        });
+
+        //plugins = require("thirdparty/prettierLib/parser-html.js");
+        //plugins = require("../extensions/default/PrettierLib/prettier/src/language-html/parser-html.js");
+
+    }
+
+
+    /**
      * Initialize
      */
     function _init() {
@@ -383,7 +411,9 @@ define(function (require, exports, module) {
         $indentWidthLabel   = $("#indent-width-label");
         $indentWidthInput   = $("#indent-width-input");
         $statusOverwrite    = $("#status-overwrite");
+        $statusPrettier     = $("#status-lint");
 
+        $statusPrettier.on("click",_prettierCodeFormatter);
         languageSelect      = new DropdownButton("", [], function (item, index) {
             var document = EditorManager.getActiveEditor().document,
                 defaultLang = LanguageManager.getLanguageForPath(document.file.fullPath, true);
